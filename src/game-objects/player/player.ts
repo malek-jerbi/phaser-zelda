@@ -72,7 +72,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
             this.play ({key: PLAYER_ANIMATION_KEYS.IDLE_DOWN, repeat: -1}, true);
         }
 
-
+        this.#normalizeVelocity();
     }
 
     #updateVelocity(isX: boolean, value: number): void {
@@ -81,12 +81,20 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         }
 
         if (isX) {
-            this.body.velocity.x = value * 80;
+            this.body.velocity.x = value;
             return;
         } 
-        this.body.velocity.y = value * 80;
+        this.body.velocity.y = value;
         
     }
 
+    #normalizeVelocity(): void {
+        if (!isArcadePhysicsBody(this.body)) {
+            return;
+        }
+
+        this.body.velocity.normalize().scale(80)
+        // console.log(this.body.velocity);
+    }
     
 }
