@@ -57,6 +57,7 @@ export class StateMachine {
         this.#currentState = this.#states.get(name);
 
         if (this.#currentState?.onEnter) {
+            this.#log(methodName, `${this.#currentState.name} on enter invoked`);
             this.#currentState.onEnter(args);
         }
 
@@ -79,6 +80,6 @@ export class StateMachine {
         if (!ENABLE_LOGGING) {
             return;
         }
-        console.warn(`[${StateMachine.name}-${this.#id}:${methodName}] ${message}`);
+        console.log(`[${StateMachine.name}-${this.#id}:${methodName}] ${message}`);
     }
 }
