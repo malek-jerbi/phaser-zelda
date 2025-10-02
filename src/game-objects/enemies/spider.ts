@@ -39,6 +39,8 @@ export class Spider extends CharacterGameObject {
             animationConfig,
             speed: ENEMEY_SPIDER_SPEED,
             inputComponent: new InputComponent(),
+            isInvulnerable: false,
+            invulnerableAfterHitAnimationDuration: 0,
         })
 
         this._directionComponent.callback = (direction: Direction) => {

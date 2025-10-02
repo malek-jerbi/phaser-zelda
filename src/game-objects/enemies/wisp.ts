@@ -32,6 +32,7 @@ export class Wisp extends CharacterGameObject {
             animationConfig,
             speed: ENEMY_WISP_SPEED,
             inputComponent: new InputComponent(),
+            isInvulnerable: true,
         })
  
 
