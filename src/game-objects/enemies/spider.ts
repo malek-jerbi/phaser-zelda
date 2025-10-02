@@ -4,12 +4,13 @@ import { InputComponent } from '../../components/input/input-component';
 import { IdleState } from '../../components/state-machine/states/character/idle-state';
 import { CHARACTER_STATES } from '../../components/state-machine/states/character/character-states';
 import { MoveState } from '../../components/state-machine/states/character/move-state';
-import { ENEMEY_SPIDER_SPEED, ENEMY_SPIDER_CHANGE_DIRECTION_DELAY_MAX, ENEMY_SPIDER_CHANGE_DIRECTION_DELAY_MIN, ENEMY_SPIDER_CHANGE_DIRECTION_DELAY_WAIT } from '../../common/config';
+import { ENEMEY_SPIDER_SPEED, ENEMY_SPIDER_CHANGE_DIRECTION_DELAY_MAX, ENEMY_SPIDER_CHANGE_DIRECTION_DELAY_MIN, ENEMY_SPIDER_CHANGE_DIRECTION_DELAY_WAIT, ENEMY_SPIDER_HURT_PUSH_BACK_SPEED } from '../../common/config';
 import { AnimationConfig } from '../../components/game-object/animation-component';
 import { ASSET_KEYS, SPIDER_ANIMATION_KEYS } from '../../common/assets';
 import { CharacterGameObject } from '../common/character-game-object';
 import { DIRECTION } from '../../common/common';
 import { exhaustiveGuard } from '../../common/utils';
+import { HurtState } from '../../components/state-machine/states/character/hurt-state';
 
 export type SpiderConfig = {
     scene: Phaser.Scene;
@@ -18,6 +19,7 @@ export type SpiderConfig = {
 export class Spider extends CharacterGameObject {
     constructor(config: SpiderConfig) {
         const animConfig = {key: SPIDER_ANIMATION_KEYS.WALK, repeat: -1, ignoreIfPlaying: true}
+        const hurtAnimConfig = {key: SPIDER_ANIMATION_KEYS.HIT, repeat: 0, ignoreIfPlaying: true}
         const animationConfig: AnimationConfig = {
             WALK_DOWN: animConfig,
             WALK_UP: animConfig,
@@ -27,6 +29,10 @@ export class Spider extends CharacterGameObject {
             IDLE_UP: animConfig,
             IDLE_LEFT: animConfig,
             IDLE_RIGHT: animConfig,
+            HURT_DOWN: hurtAnimConfig,
+            HURT_UP: hurtAnimConfig,
+            HURT_LEFT: hurtAnimConfig,
+            HURT_RIGHT: hurtAnimConfig,
         }
 
         super({
@@ -50,6 +56,7 @@ export class Spider extends CharacterGameObject {
 
         this._stateMachine.addState(new IdleState(this));
         this._stateMachine.addState(new MoveState(this));
+        this._stateMachine.addState(new HurtState(this, ENEMY_SPIDER_HURT_PUSH_BACK_SPEED))
         this._stateMachine.setState(CHARACTER_STATES.IDLE_STATE);
 
         this.scene.time.addEvent({
