@@ -15,7 +15,7 @@ export class GameScene extends Phaser.Scene {
   #controls!: KeyboardComponent;
   #player!: Player;
   #enemyGroup!: Phaser.GameObjects.Group;
-
+  #blockingGroup!: Phaser.GameObjects.Group;
 
   constructor() {
     super({
@@ -51,22 +51,24 @@ export class GameScene extends Phaser.Scene {
       })
     ], {runChildUpdate: true});
 
-    new Pot({
-      scene: this,
-      position: {x: this.scale.width / 2 + 90, y: this.scale.height / 2},
-    })
 
-    new Chest({
-      scene: this,
-      position: {x: this.scale.width / 2 - 90, y: this.scale.height / 2},
-      requiresBossKey: false,
-    })
+    this.#blockingGroup = this.add.group([
+      new Pot({
+        scene: this,
+        position: {x: this.scale.width / 2 + 90, y: this.scale.height / 2},
+      }),
+      new Chest({
+        scene: this,
+        position: {x: this.scale.width / 2 - 90, y: this.scale.height / 2},
+        requiresBossKey: false,
+      }),
+      new Chest({
+        scene: this,
+        position: {x: this.scale.width / 2 - 90, y: this.scale.height / 2 - 80},
+        requiresBossKey: true,
+      })
+    ]);
 
-    new Chest({
-      scene: this,
-      position: {x: this.scale.width / 2 - 90, y: this.scale.height / 2 - 80},
-      requiresBossKey: true,
-    })
     this.#registerColliders();
 
   }
@@ -81,6 +83,10 @@ export class GameScene extends Phaser.Scene {
       this.#player.hit(DIRECTION.DOWN, 1)
       const enemyGameObject = enemy as CharacterGameObject;
       enemyGameObject.hit(this.#player.direction, 1);
+    })
+
+    this.physics.add.collider(this.#player, this.#blockingGroup, () => {
+      
     })
   }
 }
