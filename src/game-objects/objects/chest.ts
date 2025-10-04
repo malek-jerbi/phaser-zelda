@@ -1,7 +1,8 @@
 import * as Phaser from 'phaser';
 import { Position, ChestState } from '../../common/types';
 import { ASSET_KEYS, CHEST_FRAME_KEYS } from '../../common/assets';
-import { CHEST_STATE } from '../../common/common';
+import { CHEST_STATE, INTERACTIVE_OBJECT_TYPE } from '../../common/common';
+import { InteractiveObjectComponent } from '../../components/game-object/interacive-object-component';
 
 type ChestConfig = {
     scene: Phaser.Scene;
@@ -29,6 +30,8 @@ export class Chest extends Phaser.Physics.Arcade.Image {
         if (this.#isBossKeyChest) {
             (this.body as Phaser.Physics.Arcade.Body).setSize(32, 24).setOffset(0, 8);
         }
+
+        new InteractiveObjectComponent(this, INTERACTIVE_OBJECT_TYPE.OPEN)
 
     }
     public open(): void {

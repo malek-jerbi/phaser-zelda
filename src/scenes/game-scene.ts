@@ -10,6 +10,7 @@ import { CHEST_STATE, DIRECTION } from '../common/common';
 import { PLAYER_START_MAX_HEALTH } from '../common/config';
 import { Pot } from '../game-objects/objects/pot';
 import { Chest } from '../game-objects/objects/chest';
+import { GameObject } from '../common/types';
 
 export class GameScene extends Phaser.Scene {
   #controls!: KeyboardComponent;
@@ -85,7 +86,11 @@ export class GameScene extends Phaser.Scene {
       enemyGameObject.hit(this.#player.direction, 1);
     })
 
-    this.physics.add.collider(this.#player, this.#blockingGroup, () => {
+    this.physics.add.collider(this.#player, this.#blockingGroup, (player, gameObject) => {
+      this.#player.collidedWithGameObject(gameObject as GameObject);
+    })
+
+    this.physics.add.collider(this.#enemyGroup, this.#blockingGroup, (enemy, gameObject) => {
       
     })
   }
